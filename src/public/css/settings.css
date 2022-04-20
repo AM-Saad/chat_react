@@ -1,0 +1,33 @@
+.profile{
+    text-align: center;
+}
+.profile-img{
+    max-width: 100%;
+    height: 200px;
+    display: block;
+    margin: auto;
+}
+.profile h3, .profile h4{
+    margin: var(--s-margin) 0;
+}
+ .profile h4{
+     color: #777;
+ }
+
+ .profile-menu{
+     text-align: center;
+     padding: var(--m-padding);
+ }
+ .profile-menu li{
+    margin: var(--l-margin) 0;
+    background-color: #f9f9f9;
+    padding: var(--m-padding);
+    border-radius: 5px;
+    box-shadow: var(--shadow2);
+    cursor: pointer;
+
+}
+
+.profile-menu li:hover{
+    background-color:#eee
+}

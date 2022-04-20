@@ -1,0 +1,116 @@
+.submenu-item {
+  height: 100%;
+  width: 100%;
+
+  padding: var(--m-padding);
+  transition: .3s;
+  position: absolute;
+  z-index: 99;
+  left: 0;
+  top: 0;
+  background-color: #fff;
+  box-shadow: var(--shadow3);
+  box-shadow: 0 1px 8px rgb(0 0 0 / 30%);
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transform: translateY(-20px);
+  transform: translateY(-20px);
+  -webkit-transition: opacity 0.4s ease, visibility 0.4s, -webkit-transform 0.4s ease;
+  transition: opacity 0.4s ease, visibility 0.4s, -webkit-transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s, -webkit-transform 0.4s ease;
+  overflow-x: scroll;
+}
+.submenu-item-title{
+  font-weight: bold
+}
+
+.submenu-item.active, .submenu-item.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-trigger {
+  background: #ffffff;
+  border-radius: 90px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 9px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  border: none;
+  vertical-align: middle;
+  transition: box-shadow 0.4s ease;
+  margin-left: auto;
+  /* Strictly for positioning */
+}
+
+.menu-trigger:hover {
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+}
+
+.menu-trigger span {
+  font-weight: 700;
+  vertical-align: middle;
+  font-size: 14px;
+  margin: 0 10px;
+}
+
+.menu-trigger img {
+  border-radius: 90px;
+  height: 40px;
+  width: 40px;
+}
+
+.menu {
+  background: #ffffff;
+  border-radius: 8px;
+  position: absolute;
+  top: 60px;
+  right: 0;
+  width: 300px;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-20px);
+  transition: opacity 0.4s ease, transform 0.4s ease, visibility 0.4s;
+  z-index: 99;
+  overflow: hidden;
+
+}
+
+.menu.active {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.menu li {
+  border-bottom: 1px solid #dddddd;
+}
+
+.menu li a {
+  text-decoration: none;
+  color: #333333;
+  padding: 15px 20px;
+  display: block;
+  cursor: pointer;
+}
+.menu li a:hover{
+  background-color: #f9f9f9;
+}
