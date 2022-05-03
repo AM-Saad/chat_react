@@ -1,12 +1,10 @@
 
 import React, { useEffect, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import {StyledMessage} from '../styles/Message.styled'
 
 const Messages = () => {
-    const dispatch = useDispatch()
 
-    const displayedMsgs = useSelector(state => state.displayedMsgs)
     const conversation = useSelector(state => state.conversation)
     const uid = useSelector(state => state.uid)
 
@@ -23,7 +21,7 @@ const Messages = () => {
 
     return (
         <ul id="messages" className="box-messages">
-            {conversation.map((object, i) => <StyledMessage type={(object.sender === uid ? 'type-0' : 'type-1')}> {object.msg} <small>{object.date.time}</small> </StyledMessage>)}
+            {conversation.map((object, i) => <StyledMessage key={object._id} type={(object.sender === uid ? 'type-0' : 'type-1')}> {object.msg} <small>{object.date.time}</small> </StyledMessage>)}
             <StyledMessage className="end"  ref={messagesEndRef} />
         </ul>
 

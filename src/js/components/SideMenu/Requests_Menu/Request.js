@@ -1,23 +1,19 @@
 import React from "react";
 import { useDispatch } from 'react-redux';
-import { acceptRequest, denyRequest } from "js/actions";
-
-import socket from '../../../util/socket'
+import { accept_request, deny_request } from "js/actions";
 
 
 function Request(prop) {
 
     const dispatch = useDispatch();
 
-    // Get next question when choose specific answer 
     function accept() {
-        dispatch(acceptRequest(prop.request._id))
+        dispatch(accept_request(prop.request._id))
     }
     function deny() {
-        dispatch(denyRequest(prop.request._id))
+        dispatch(deny_request(prop.request._id))
 
     }
-
 
     return (
         <div className=" b-r-medium bg-lightgray p-medium m-large flex f-space-between">

@@ -1,64 +1,75 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import socket from '../util/socket'
-import useWindowDimensions from '../util/windowDimensions'
 import NetworkDetector from '../Hoc/NetworkDetector';
+import useWindowDimensions from '../util/windowDimensions';
 import Login from "./Login";
-import Settings from "./SideMenu/Settings_Menu/Main";
 import Search from "./Search/Main";
 import Chat from '../components/Conversation/Main'
 import SideMenuSkeleton from "../components/SideMenu/index";
-
-import { FetchMe, FetchFriends, checkAuth, UpdateUserOnlineStatus, NewMsg, UserTyping, UserStoppedTyping, AddMsgToCurrentConv } from "../actions/index";
+import { StyledBody } from '../components/styles/Body.styled'
+import { fetch_me, fetch_friends, update_friend_online_status, new_msg, friend_typing, friend_stopped_typing, add_msg_to_active_conv } from "../actions/index";
+import Notification from 'js/components/General/Notification'
 
 const App = () => {
-  const username = useSelector(state => state.username)
   const uid = useSelector(state => state.uid)
   const isAuth = useSelector(state => state.isAuth)
-  const meMeta = useSelector(state => state.meMeta)
+  const activeChat = useSelector(state => state.activeChat)
   const [toggleSidebar, setToggleSidebar] = useState(false)
 
   const dispatch = useDispatch();
+  dispatch({ type: 'CHECK_AUTH' })
 
-  dispatch(checkAuth())
 
+  // Ask: Why  when  the value inside useWindowDimensions it re-render tha app component and the value inside useWindowDimensions is the same
+  const [screenWidth, setScreenWidth] = useState(useWindowDimensions().width)
 
   useEffect(() => {
     if (isAuth) {
-      dispatch(FetchFriends())
-      dispatch(FetchMe())
-
+      dispatch(fetch_friends())
+      dispatch(fetch_me())
+      
       socket.emit('join-chats', uid)
 
-      socket.on('typing', (userId) => dispatch(UserTyping(userId)))
-      socket.on('stoptyping', (userId) => dispatch(UserStoppedTyping(userId)))
+      socket.on('typing', (userId) => dispatch(friend_typing(userId)))
+      socket.on('stoptyping', (userId) => dispatch(friend_stopped_typing(userId)))
+      
       socket.on('new-message', (msg) => {
-        dispatch(NewMsg(msg))
-        dispatch(AddMsgToCurrentConv(msg))
+        dispatch(new_msg(msg))
+        dispatch(add_msg_to_active_conv(msg))
       })
 
       socket.on('online-user', (user) => {
-        dispatch(UpdateUserOnlineStatus(user))
+        dispatch(update_friend_online_status(user))
       })
+
       socket.on('friend_block_unblock', (data) => {
         dispatch({ type: "FRIEND_BLOCK_UNBLOCK", payload: data })
-        dispatch({ type: "CURRENT_CONV_BLOCK_UNBLOCK", payload: data })
-
+        dispatch({ type: "ACTIVE_CONV_BLOCK_UNBLOCK", payload: data })
 
       })
+
+      socket.on('clear_chat', (data) => {
+        dispatch({ type: "DELETE_ACTIVE_CONV", payload: data.chatNumber })
+        dispatch({ type: "DELETE_FRIEND_CONV", payload: data.chatNumber })
+      })
+
+
       socket.on('new_friend_request', (user) => {
         dispatch({ type: "NEW_FRIEND_REQUEST", payload: [user] })
       })
+
       socket.on('friend_request_status', (data) => dispatch({ type: 'FRIEND_REQUEST_STATUS', payload: data }))
 
       window.addEventListener("beforeunload", handleUnload);
-      return () => {
-        window.removeEventListener("beforeunload", handleUnload);
-      };
+      if (screenWidth && screenWidth < 900) {
+        setToggleSidebar(true)
+      }
     }
-  }, [isAuth, handleUnload])
-
-
+    return () => {
+      window.removeEventListener("beforeunload", handleUnload);
+    };
+  }, [isAuth, handleUnload, screenWidth])
 
   const handleUnload = (e) => {
     socket.emit('offline', uid)
@@ -69,54 +80,34 @@ const App = () => {
     return <Login />
   }
 
-  if (meMeta.loading) {
-    return <div>
-      <h1>Welcome Back, {username}</h1>
-      <p>Please wait while loading your data...</p>
-    </div>
-
-  } else {
-    console.log('hola')
-    return <>
-      <div>
-        <SideMenuSkeleton toggleSidebar={toggleSidebar} onToggleSidebar={() => setToggleSidebar(false)} />
-        <div className="md:pl-64 ">
-          <div className="sticky top-0 flex-shrink-0 flex h-16 bg-white shadow">
-            <button
-              type="button"
-              className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
-              onClick={() => setToggleSidebar(true)}
-            >
-              <span className="sr-only">Open sidebar</span>
-              =
-            </button>
-            <div className="flex-1 px-4 flex justify-between">
-              <Search />
-              <div className="ml-4 flex items-center md:ml-6">
-                <button
-                  type="button"
-                  className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                >
-                  <span className="sr-only">View notifications</span>
-                  {/* <BellIcon className="h-6 w-6" aria-hidden="true" /> */}
-                </button>
-
-                <Settings active={true} clearOpenedItem={() => { }} />
-              </div>
-            </div>
-          </div>
-
-          <main className="flex-1">
-            <Chat />
-          </main>
+  return <>
+    <SideMenuSkeleton toggleSidebar={toggleSidebar} onToggleSidebar={() => setToggleSidebar(false)} />
+    <div className="md:pl-72 lg:pl-80 ">
+      <div className={`sticky top-0 flex-shrink-0 ${activeChat ? ' sm:hidden flex' : ' flex '} h-16 bg-white shadow`}>
+        <button
+          type="button"
+          className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+          onClick={() => setToggleSidebar(true)}
+        >
+          <span className="sr-only">Open sidebar</span>
+          =
+        </button>
+        <div className='flex-1 px-4 flex justify-between'>
+          <Search />
         </div>
       </div>
-    </>
-  }
+      <StyledBody >
+        <Chat />
+        <Notification />
+      </StyledBody>
+
+    </div>
+  </>
+}
 
 
 
 
-};
+// };
 
 export default NetworkDetector(App);

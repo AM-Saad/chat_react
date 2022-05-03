@@ -1,35 +1,32 @@
-import React, { useState, useEffect, Fragment } from 'react'
-import { useSelector } from "react-redux";
+import React, {  Fragment } from 'react'
 import EditProfile from './EditProfile'
-import { Dialog, Menu, Transition } from '@headlessui/react'
+import { Dialog, Transition } from '@headlessui/react'
 
 export default function Profile(props) {
-    const me = useSelector(state => state.me)
-    const url = useSelector(state => state.url)
-    const [isEditProfile, setIsEditProfile] = useState(false);
-
-
-    useEffect(() => {
-        if (props) {
-            console.log(props)
-        }
-    }, [props])
-
 
     return (<Transition.Root show={props.active} as={Fragment}>
-        <Dialog as="div" className="fixed inset-0 overflow-hidden " onClose={setIsEditProfile}>
+        <Dialog as="div" className="fixed inset-0 overflow-hidden z-50" onClose={props.closePanel}>
             <div className="absolute inset-0 overflow-hidden">
-                <Dialog.Overlay className="absolute inset-0" />
-
-                <div className="pointer-events-none top-20 fixed inset-y-0 right-0 flex max-w-full pl-10">
+             <Transition.Child
+            as={Fragment}
+            enter="ease-in-out duration-500"
+            enterFrom="opacity-0"
+            enterTo="opacity-100"
+            leave="ease-in-out duration-500"
+            leaveFrom="opacity-100"
+            leaveTo="opacity-0"
+          >
+            <Dialog.Overlay className="absolute inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+          </Transition.Child>
+                <div className="pointer-events-none fixed inset-y-0  flex max-w-full pr-10">
                     <Transition.Child
                         as={Fragment}
                         enter="transform transition ease-in-out duration-500 sm:duration-700"
-                        enterFrom="translate-x-full"
+                        enterFrom="-translate-x-full"
                         enterTo="translate-x-0"
                         leave="transform transition ease-in-out duration-500 sm:duration-700"
-                        leaveFrom="translate-x-0"
-                        leaveTo="translate-x-full"
+                        leaveFrom="-translate-x-0"
+                        leaveTo="-translate-x-full"
                     >
                         <div className="pointer-events-auto w-screen max-w-md h-full">
                             <div className="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">

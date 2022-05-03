@@ -1,10 +1,9 @@
 import React, { Fragment } from "react";
 import SideMenuContent from "./SideMenuContent";
-
-
+import Settings from "../SideMenu/Settings_Menu/Main";
 import { Dialog, Transition } from '@headlessui/react'
 
-
+import Requests from "../../components/SideMenu/Requests_Menu/Requests"
 
 const MobileSideMenu = (props) => {
 
@@ -31,7 +30,7 @@ const MobileSideMenu = (props) => {
                 leaveFrom="translate-x-0"
                 leaveTo="-translate-x-full"
             >
-                <div className="h-full relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white">
+                <div className="h-full relative flex-1  flex-col max-w-xs w-full pt-5 pb-4 bg-white">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-in-out duration-300"
@@ -49,17 +48,24 @@ const MobileSideMenu = (props) => {
                             >
                                 <span className="sr-only">Close sidebar</span>
                                 X
-        </button>
+                            </button>
                         </div>
                     </Transition.Child>
-                    <div className="flex-shrink-0 flex items-center px-4">
+
+                    <div className="flex-shrink-0 flex items-center justify-between px-4">
                         <img
                             className="h-8 w-auto"
                             src="https://tailwindui.com/img/logos/workflow-logo-indigo-600-mark-gray-800-text.svg"
                             alt="Workflow"
                         />
+                        <div className="flex">
+                        <Requests />
+
+                        <Settings />
+                        </div>
+
                     </div>
-                    <div className="mt-5 flex-1 h-0 overflow-y-auto">
+                    <div className="mt-5 flex-1 overflow-y-auto">
                         <SideMenuContent />
                     </div>
                 </div>

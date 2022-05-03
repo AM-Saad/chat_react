@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 
 export const StyledFriend = styled.li`
-    display:flex;
+    display:${({ visible }) => visible ? 'flex' : 'none'};
     align-items:center;
     padding:4px;
     font-size: 1rem;

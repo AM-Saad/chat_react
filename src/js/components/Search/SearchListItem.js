@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useDispatch, useSelector, } from 'react-redux';
-import { sendRequest, acceptRequest, denyRequest, socket_friend_requiest } from "js/actions/index"
+import { send_request, accept_request, deny_request, socket_send_friend_requiest } from "js/actions/index"
 
 import socket from 'js/util/socket'
 import addFriendIcon from 'public/image/add-friend.png'
@@ -15,32 +15,25 @@ function ListItem(prop) {
 
     const dispatch = useDispatch();
 
-    const [check, setCheck] = useState(false);
 
-    // Get next question when choose specific answer 
     function request() {
-        dispatch(sendRequest(prop.user._id))
-        dispatch(socket_friend_requiest(socket, prop.user._id, me))
-        setCheck(prevCheck => !prevCheck);
+        dispatch(send_request(prop.user._id))
+        dispatch(socket_send_friend_requiest(socket, prop.user._id, me))
 
     }
 
 
     function accept() {
-        dispatch(acceptRequest(prop.request._id))
+        dispatch(accept_request(prop.request._id))
     }
     function deny() {
-        dispatch(denyRequest(prop.request._id))
+        dispatch(deny_request(prop.request._id))
 
     }
 
-    useEffect(() => {
-        if (sendingRequest) {
+ 
 
-        }
-    }, [sendingRequest])
-
-    const userStatus = () => {
+    const userFriendRqquestStatus = () => {
         let existInFriends = allfriends.find(f => f._id.toString() === prop.user._id.toString())
         if (existInFriends) {
             return <div className="flex cursor-pointer"><img className="h-7" src={friendIcon} alt="friend" /> Friend</div>
@@ -67,7 +60,7 @@ function ListItem(prop) {
     return (
         <li className={`b-r-medium bg-lightgray p-large m-large flex f-space-between ${sendingRequest ? "loader" : ""}`}>
             <p>{prop.user.name}</p>
-            {userStatus()}
+            {userFriendRqquestStatus()}
         </li>
     );
 };

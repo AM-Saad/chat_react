@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useDispatch, useSelector } from 'react-redux';
-import { openChat, loadMoreMsgs, toggleFriends } from "../../../actions/index";
+import { open_chat, loadMoreMsgs } from "../../../actions/index";
 import {StyledFriend} from '../../styles/Friend.styled'
 import OnlineIcon from "js/components/General/OnlineIcon";
 
@@ -8,18 +8,10 @@ import OnlineIcon from "js/components/General/OnlineIcon";
 function Friend(friend) {
     const url = useSelector(state => state.url)
     const dispatch = useDispatch();
-    useEffect(() => {
-        // if (friend.friend.online) {
-        //     console.log(friend.friend.online);
-        // }
 
+    function openChat() {
 
-    }, [friend])
-
-    function chat() {
-
-        dispatch(toggleFriends(false))
-        dispatch(openChat(friend.friend._id))
+        dispatch(open_chat(friend.friend._id))
         dispatch(loadMoreMsgs())
     }
 
@@ -35,11 +27,11 @@ function Friend(friend) {
 
    
     return (
-        <StyledFriend onClick={chat} newMsg={friend.friend.new} online={friend.friend.online}>
-            <div className="flex cursor-pointer">
+        <StyledFriend onClick={openChat} visible={friend.friend.visible} newMsg={friend.friend.new} >
+            <div className="flex cursor-pointer w-full">
                 <div className="p-relative">
 
-                    <img  src={friend.friend.image ? `${url}/${friend.friend.image} ` : 'https://www.bsn.eu/wp-content/uploads/2016/12/user-icon-image-placeholder.jpg'} />
+                    <img  alt={friend.friend.name} src={friend.friend.image ? `${url}/${friend.friend.image} ` : 'https://www.bsn.eu/wp-content/uploads/2016/12/user-icon-image-placeholder.jpg'} />
                     <OnlineIcon  online={friend.friend.online}/>
 
                 </div>
